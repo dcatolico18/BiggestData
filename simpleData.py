@@ -5,7 +5,7 @@ class SimpleData():
 
     def writeToFile(self):
         with open('trajectories(table 5)_training.csv') as inputFile:
-            with open('output.csv', "w+") as outputFile:
+            with open('inputForKnn.csv', "w+") as outputFile:
                 dataWriter = csv.writer(outputFile)
                 for index, line in enumerate(inputFile):
                     if index == 0:
