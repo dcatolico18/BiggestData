@@ -3,9 +3,9 @@ import datetime
 
 class SimpleData():
 
-    def writeToFile(self):
-        with open('trajectories(table 5)_training.csv') as inputFile:
-            with open('inputForKnn.csv', "w+") as outputFile:
+    def writeToFile(self, inputFilename, outputFilename):
+        with open(inputFilename) as inputFile:
+            with open(outputFilename, "w+") as outputFile:
                 dataWriter = csv.writer(outputFile)
                 for index, line in enumerate(inputFile):
                     if index == 0:
@@ -19,6 +19,10 @@ class SimpleData():
                     dayOfWeek = lineDate.weekday()
                     timeOfDay = list(map(int, words[3].split(":")))
                     timeOfDay[0] *= 60
+                    timeOfDay[1] = self.myround(timeOfDay[1])
                     timeOfDay = sum(timeOfDay)
-                    travelTime = int(words[4].split('.')[0])
+                    travelTime = self.myround(int(words[4].split('.')[0]), 5)
                     dataWriter.writerow([route, tollgate, dayOfWeek, timeOfDay, travelTime])
+
+    def myround(self, x, base=20):
+        return int(base * round(float(x)/base))
