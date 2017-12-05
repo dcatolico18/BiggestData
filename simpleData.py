@@ -21,7 +21,7 @@ class SimpleData():
                     startTime = self.getStartTime(words)
                     travelTime = self.getTravelTime(words)
                     rain = self.getRain(words)
-                    dataWriter.writerow(routes + tollgates + [dayOfWeek, startTime, rain, travelTime])
+                    dataWriter.writerow(routes + tollgates + dayOfWeek + [startTime, rain, travelTime])
 
     def myround(self, x, base=20):
         return int(base * round(float(x)/base))
@@ -41,9 +41,11 @@ class SimpleData():
         return tollgates
 
     def getDayOfWeek(self, words):
+        daysOfWeek = [0,0,0,0,0,0,0]
         dateList = words[2].split("/")
         lineDate = datetime.date(2000 + int(dateList[2]), int(dateList[0]), int(dateList[1]))
-        return lineDate.weekday()/6.0
+        daysOfWeek[lineDate.weekday()] += 1
+        return daysOfWeek
 
     def getStartTime(self, words):
         timeOfDay = list(map(int, words[3].split(":")))
@@ -65,7 +67,7 @@ def main():
         # load the training and test data set
         inputFile = input('Enter name of input file : ')
         outputFile = input('Enter name of output file : ')
-        
+
         scrapedData = SimpleData()
 
         scrapedData.writeToFile(inputFile, outputFile)
