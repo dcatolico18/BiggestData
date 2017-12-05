@@ -61,6 +61,8 @@ def knn(training_set, test_set, k):
     distances = []
     dist = 0
     limit = len(training_set[0]) - 1
+    totalTested = 0 
+    totalRight = 0
 
     # generate response classes from training data
     classes = get_classes(training_set)
@@ -68,7 +70,7 @@ def knn(training_set, test_set, k):
     try:
         for test_instance in test_set:
             for row in training_set:
-                for x, y in zip(row[:limit], test_instance):
+                for x, y in zip(row[:limit], test_instance[:limit]):
                     dist += (x-y) * (x-y)
                 distances.append(row + [sqrt(dist)])
                 dist = 0
@@ -82,11 +84,18 @@ def knn(training_set, test_set, k):
             index, value = find_response(neighbors, classes)
 
             # Display prediction
-            print('The predicted class for sample ' + str(test_instance) + ' is : ' + classes[index])
-            print('Number of votes : ' + str(value) + ' out of ' + str(k))
+            # print('The predicted class for sample ' + str(test_instance) + ' is : ' + classes[index])
+            # print('Number of votes : ' + str(value) + ' out of ' + str(k))
 
+            totalTested += 1
+            totalRight += 1 if abs(float(classes[index]) - test_instance[-1]) <= 30 else 0
+            print(totalTested)
             # empty the distance list
             distances.clear()
+
+        print("The total number of samples was: ", totalTested)
+        print("The number correctly classified was: ", totalRight)
+        print("Percent right: ", 1.0 * totalRight/totalTested)
 
     except Exception as e:
         print(e)
