@@ -15,13 +15,13 @@ class SimpleData():
                     if index == 0:
                         continue
                     words = self.getWords(line)
-                    route = self.getRoute(words)
-                    tollgate = self.getTollgate(words)
+                    routes = self.getRoute(words)
+                    tollgates = self.getTollgate(words)
                     dayOfWeek = self.getDayOfWeek(words)
                     startTime = self.getStartTime(words)
                     travelTime = self.getTravelTime(words)
                     rain = self.getRain(words)
-                    dataWriter.writerow([route, tollgate, dayOfWeek, startTime, rain, travelTime])
+                    dataWriter.writerow(routes + tollgates + [dayOfWeek, startTime, rain, travelTime])
 
     def myround(self, x, base=20):
         return int(base * round(float(x)/base))
@@ -31,10 +31,14 @@ class SimpleData():
         return splitLine[0].split(",") + splitLine[1].split(",")
 
     def getRoute(self, words):
-        return (ord(words[0]) - 65)/3.0
+        routeList = [0, 0, 0]
+        routeList[ord(words[0]) - 65] += 1
+        return routeList
 
     def getTollgate(self, words):
-        return int(words[1])/3.0
+        tollgates = [0, 0, 0]
+        tollgates[int(words[1]) - 1] += 1
+        return tollgates
 
     def getDayOfWeek(self, words):
         dateList = words[2].split("/")
@@ -54,3 +58,24 @@ class SimpleData():
         dateList = words[2].split("/")
         lineDate = datetime.date(2000 + int(dateList[2]), int(dateList[0]), int(dateList[1]))
         return self.rainDict.lookupTable[lineDate]
+
+def main():
+    try:
+
+        # load the training and test data set
+        inputFile = input('Enter name of input file : ')
+        outputFile = input('Enter name of output file : ')
+        
+        scrapedData = SimpleData()
+
+        scrapedData.writeToFile(inputFile, outputFile)
+
+    except ValueError as v:
+        print(v)
+
+    except FileNotFoundError:
+        print('File not found')
+
+
+if __name__ == '__main__':
+    main()

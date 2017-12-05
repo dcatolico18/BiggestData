@@ -23,5 +23,6 @@ class Weather():
         for key in self.lookupTable.keys():
             totalRain += self.lookupTable[key]
 
+        largestRain = max([i for i in self.lookupTable.values()])
         for key in self.lookupTable.keys():
-            self.lookupTable[key] /= totalRain
+            self.lookupTable[key] /= largestRain
