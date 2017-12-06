@@ -6,6 +6,7 @@ class SimpleData():
 
     def __init__(self):
         self.rainDict = weather.Weather()
+        self.dataRDD
 
     def writeToFile(self, inputFilename, outputFilename):
         with open(inputFilename) as inputFile:
@@ -22,6 +23,24 @@ class SimpleData():
                     travelTime = self.getTravelTime(words)
                     rain = self.getRain(words)
                     dataWriter.writerow(routes + tollgates + dayOfWeek + [startTime, rain, travelTime])
+
+
+    def writeToRDD(self, inputFileName):
+        sc = pyspark.SparkContext(master="local")
+        self.dataRDD = sc.textFile(inputFileName)
+        with open(inputFilename) as inputFile:
+            for index, line in enumerate(inputFile):
+                if index == 0:
+                    continue
+                words = self.getWords(line)
+                routes = self.getRoute(words)
+                tollgates = self.getTollgate(words)
+                dayOfWeek = self.getDayOfWeek(words)
+                startTime = self.getStartTime(words)
+                travelTime = self.getTravelTime(words)
+                rain = self.getRain(words)
+                self.dataRDD = self.dataRDD.union(routes + tollgates + dayOfWeek + [startTime, rain, travelTime])
+        return self.dataRDD
 
     def myround(self, x, base=20):
         return int(base * round(float(x)/base))
