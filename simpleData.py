@@ -1,12 +1,12 @@
 import csv
 import datetime
 import weather
+from math import sin, cos, pi
 
 class SimpleData():
 
     def __init__(self):
         self.rainDict = weather.Weather()
-        self.dataRDD
 
     def writeToFile(self, inputFilename, outputFilename):
         with open(inputFilename) as inputFile:
@@ -22,25 +22,8 @@ class SimpleData():
                     startTime = self.getStartTime(words)
                     travelTime = self.getTravelTime(words)
                     rain = self.getRain(words)
-                    dataWriter.writerow(routes + tollgates + dayOfWeek + [startTime, rain, travelTime])
+                    dataWriter.writerow(routes + tollgates + dayOfWeek + startTime + [rain, travelTime])
 
-
-    def writeToRDD(self, inputFileName):
-        sc = pyspark.SparkContext(master="local")
-        self.dataRDD = sc.textFile(inputFileName)
-        with open(inputFilename) as inputFile:
-            for index, line in enumerate(inputFile):
-                if index == 0:
-                    continue
-                words = self.getWords(line)
-                routes = self.getRoute(words)
-                tollgates = self.getTollgate(words)
-                dayOfWeek = self.getDayOfWeek(words)
-                startTime = self.getStartTime(words)
-                travelTime = self.getTravelTime(words)
-                rain = self.getRain(words)
-                self.dataRDD = self.dataRDD.union(routes + tollgates + dayOfWeek + [startTime, rain, travelTime])
-        return self.dataRDD
 
     def myround(self, x, base=20):
         return int(base * round(float(x)/base))
@@ -70,7 +53,8 @@ class SimpleData():
         timeOfDay = list(map(int, words[3].split(":")))
         timeOfDay[0] *= 60
         timeOfDay[1] = self.myround(timeOfDay[1])
-        return sum(timeOfDay)/1440.0
+        timeInRad = sum(timeOfDay)/1440.0 * 2 * pi
+        return [cos(timeInRad), sin(timeInRad)]
 
     def getTravelTime(self, words):
         return self.myround(int(words[4].split('.')[0]), 10)
