@@ -22,7 +22,7 @@ class SimpleData():
                     startTime = self.getStartTime(words)
                     travelTime = self.getTravelTime(words)
                     rain = self.getRain(words)
-                    dataWriter.writerow(routes + tollgates + dayOfWeek + startTime + [rain, travelTime])
+                    dataWriter.writerow(routes + tollgates + dayOfWeek + [rain] + startTime + [travelTime])
 
 
     def myround(self, x, base=20):
