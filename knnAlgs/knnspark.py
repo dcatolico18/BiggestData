@@ -10,19 +10,6 @@ from pyspark.mllib.linalg import SparseVector, Vectors
 from pyspark import SparkConf, SparkContext
 
 
-
-###################################################################
-
-def parseInput(line):
-    """ Parses a rating record in MovieLens format userId::movieId::rating::timestamp ."""
-    # print line
-    if type(line) != list:
-        fields = line.split(",")
-        return map(float, fields)
-    else:
-        return []
-
-
 ###################################################################
 """ Given two Sparse Vectors, compute cosine similarity between them"""
 def similarity(a,b) : 
